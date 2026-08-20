@@ -1,0 +1,15 @@
+.DS_Store
+*.log
+*.sql
+*.sql.gz
+*.wpress
+*.zip
+.env
+wp-config.php
+wp-content/uploads/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/ai1wm-backups/
+backups/
+records/private/
+
