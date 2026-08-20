@@ -1,0 +1,125 @@
+diff --git a/wp-content/plugins/custom-post-template/custom-post-templates.php b/wp-content/plugins/custom-post-template/custom-post-templates.php
+index 52e11df..b5a2f33 100644
+--- a/wp-content/plugins/custom-post-template/custom-post-templates.php
++++ b/wp-content/plugins/custom-post-template/custom-post-templates.php
+@@ -4,8 +4,10 @@ Plugin Name: Custom Post Templates
+ Plugin URI: http://wordpress.org/extend/plugins/custom-post-template/
+ Description: Provides a drop-down to select different templates for posts from the post edit screen. The templates are defined similarly to page templates, and will replace single.php for the specified post.
+ Author: Simon Wheatley
+-Version: 1.5
++Version: 1.5.1-wiz
+ Author URI: http://simonwheatley.co.uk/wordpress/
++Update URI: false
++Requires PHP: 7.4
+ */
+ 
+ /*  Copyright 2008 Simon Wheatley
+@@ -109,12 +111,18 @@ class CustomPostTemplates extends CustomPostTemplates_Plugin
+ 
+ 	public function save_post( $post_ID )
+ 	{
+-		$action_needed = (bool) @ $_POST[ 'custom_post_template_present' ];
+-		if ( ! $action_needed ) return;
++		if ( wp_is_post_revision( $post_ID ) || wp_is_post_autosave( $post_ID ) ) return;
++		if ( empty( $_POST['custom_post_template_present'] ) ) return;
++		if ( empty( $_POST['custom_post_template_nonce'] ) ) return;
++		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['custom_post_template_nonce'] ) ), 'custom_post_template_save' ) ) return;
++		if ( ! current_user_can( 'edit_post', $post_ID ) ) return;
+ 
+ 		$this->post_ID = $post_ID;
+ 
+-		$template = (string) @ $_POST[ 'custom_post_template' ];
++		$template = isset( $_POST['custom_post_template'] )
++			? sanitize_file_name( wp_unslash( $_POST['custom_post_template'] ) )
++			: 'default';
++		if ( 'default' !== $template && ! isset( $this->get_post_templates()[ $template ] ) ) return;
+ 		$this->set_custom_post_template( $template );
+ 	}
+ 
+@@ -147,10 +155,12 @@ class CustomPostTemplates extends CustomPostTemplates_Plugin
+ 	
+ 	protected function set_custom_post_template( $template )
+ 	{
+-		delete_post_meta( $this->post_ID, $this->tpl_meta_key );
+-		if ( ! $template || $template == 'default' ) return;
++		if ( ! $template || $template == 'default' ) {
++			delete_post_meta( $this->post_ID, $this->tpl_meta_key );
++			return;
++		}
+ 
+-		add_post_meta( $this->post_ID, $this->tpl_meta_key, $template );
++		update_post_meta( $this->post_ID, $this->tpl_meta_key, $template );
+ 	}
+ 	
+ 	protected function get_custom_post_template()
+@@ -193,4 +203,4 @@ class CustomPostTemplates extends CustomPostTemplates_Plugin
+ 
+ $CustomPostTemplates = new CustomPostTemplates();
+ 
+-?>
+\ No newline at end of file
++?>
+diff --git a/wp-content/plugins/custom-post-template/plugin.php b/wp-content/plugins/custom-post-template/plugin.php
+index 91efaac..58d308b 100644
+--- a/wp-content/plugins/custom-post-template/plugin.php
++++ b/wp-content/plugins/custom-post-template/plugin.php
+@@ -506,7 +506,7 @@ if (!class_exists ('Widget_SU'))
+ {
+ 	class Widget_SU
+ 	{
+-		function Widget_SU ($name, $max = 1, $id = '', $args = '')
++		function __construct ($name, $max = 1, $id = '', $args = '')
+ 		{
+ 			$this->name        = $name;
+ 			$this->id          = $id;
+@@ -526,6 +526,11 @@ if (!class_exists ('Widget_SU'))
+ 			
+ 			add_action ('init', array (&$this, 'initialize'));
+ 		}
++
++		function Widget_SU ($name, $max = 1, $id = '', $args = '')
++		{
++			$this->__construct ($name, $max, $id, $args);
++		}
+ 		
+ 		function initialize ()
+ 		{
+@@ -572,7 +577,7 @@ if (!class_exists ('Widget_SU'))
+ 		function args ()
+ 		{
+ 			if ($this->args)
+-				return $args;
++				return $this->args;
+ 			return array ('classname' => '');
+ 		}
+ 		
+@@ -673,4 +678,4 @@ if (!class_exists ('Widget_SU'))
+ 		}
+ 	}
+ }
+-?>
+\ No newline at end of file
++?>
+diff --git a/wp-content/plugins/custom-post-template/view/admin/select_post_template.php b/wp-content/plugins/custom-post-template/view/admin/select_post_template.php
+index 2bba53d..354662c 100644
+--- a/wp-content/plugins/custom-post-template/view/admin/select_post_template.php
++++ b/wp-content/plugins/custom-post-template/view/admin/select_post_template.php
+@@ -1,8 +1,9 @@
+ <?php if (!defined ('ABSPATH')) die ('No direct access allowed'); ?>
+ <label class="hidden" for="page_template"><?php _e( 'Post Template', 'custom-post-templates' ); ?></label>
+-<?php if ( $templates ) : ?>
++	<?php if ( $templates ) : ?>
+ 
+-	<input type="hidden" name="custom_post_template_present" value="1" />
++		<?php wp_nonce_field( 'custom_post_template_save', 'custom_post_template_nonce' ); ?>
++		<input type="hidden" name="custom_post_template_present" value="1" />
+ 	<select name="custom_post_template" id="custom_post_template">
+ 		<option 
+ 			value='default'
+@@ -28,4 +29,4 @@
+ 
+ 	<p><?php printf( __( 'This theme has no available <a href="%s" target="_blank">custom post templates</a>.', 'custom-post-templates' ), 'http://wordpress.org/extend/plugins/custom-post-template/' ); ?></p>
+ 
+-<?php endif; ?>
+\ No newline at end of file
++<?php endif; ?>

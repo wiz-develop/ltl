@@ -8,7 +8,7 @@ Template Name: Process
 
 <div id="container">
 <div id="one-column-content">
-<h2 class="logo"><img src="/wp/wp-content/themes/lifetechlab/images/process-title.jpg" alt="Process" width="940" height="105"  /></h2>
+<h2 class="logo"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/process-title.jpg" alt="Process" width="940" height="105"  /></h2>
 
 
 <?php if ( have_posts() ) while ( have_posts() ) : the_post(); ?>

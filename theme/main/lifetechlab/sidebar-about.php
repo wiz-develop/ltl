@@ -1,7 +1,7 @@
 <?php /** ABOUT */ ?>
 
 <div id="primary" class="widget-area" role="complementary">
-<img src="/wp/wp-content/themes/lifetechlab/images/about-side-title.gif" alt="ABOUT" width="200" height="20" />
+<img src="<?php echo get_stylesheet_directory_uri(); ?>/images/about-side-title.gif" alt="ABOUT" width="200" height="20" />
 <br /><br />
 <ul class="xoxo">
 <li><a href="<?php bloginfo('url'); ?>/about">会社概要</a></li>

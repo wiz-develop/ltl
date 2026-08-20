@@ -1,0 +1,54 @@
+diff --git a/wp-content/plugins/kwebble_archives_by_cat.php b/wp-content/plugins/kwebble_archives_by_cat.php
+index c73e161..b1f9c34 100644
+--- a/wp-content/plugins/kwebble_archives_by_cat.php
++++ b/wp-content/plugins/kwebble_archives_by_cat.php
+@@ -3,13 +3,15 @@
+ Plugin Name: Archives for a category 
+ Plugin URI: http://kwebble.com/blog/2007_08_15/archives_for_a_category
+ Description: Adds a cat parameter to wp_get_archives() to limit the posts used to generate the archive links to one or more categories.   
+-Author: Rob Schlüter
++Author: Rob SchlÃ¼ter
+ Author URI: http://kwebble.com/
+-Version: 1.4b
++Version: 1.4.1-wiz
++Update URI: false
++Requires PHP: 7.4
+ 
+ Copyright
+ =========
+-Copyright 2007, 2008, 2009 Rob Schlüter. All rights reserved.
++Copyright 2007, 2008, 2009 Rob SchlÃ¼ter. All rights reserved.
+ 
+ Licensing terms
+ ===============
+@@ -135,9 +137,11 @@ function kwebble_getarchives_where_for_category($where, $args){
+ 		// Element 0 = included, 1 = excluded.
+ 		$categories = array(array(), array());
+ 		foreach ($allCategories as $cat) {
+-			if (strpos($cat, ' ') !== FALSE) {
+-				// Multi category selection.
++			$cat = trim( $cat );
++			if ( ! preg_match( '/^-?\d+$/', $cat ) ) {
++				continue;
+ 			}
++			$cat = intval( $cat );
+ 			$idx = $cat < 0 ? 1 : 0;
+ 			$categories[$idx][] = abs($cat);
+ 		}
+@@ -189,8 +193,7 @@ function kwebble_archive_link_for_category($url){
+ 	global $kwebble_getarchives_data;
+ 
+ 	if (isset($kwebble_getarchives_data['cat'])){
+-		$url .= strpos($url, '?') === false ? '?' : '&';
+-		$url .= 'cat=' . $kwebble_getarchives_data['cat'];
++		$url = add_query_arg( 'cat', $kwebble_getarchives_data['cat'], $url );
+ 	}
+ 
+ 	return $url;
+@@ -271,4 +274,4 @@ function kwebble_getarchives_admin_options_page() {
+ 
+ 	<?php
+ }
+-?>
+\ No newline at end of file
++?>

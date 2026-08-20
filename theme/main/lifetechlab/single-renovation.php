@@ -9,7 +9,7 @@ Template Name Posts: 新装・リフォーム
 <div id="container">
 <div id="content" role="main">
 
-<h2 class="logo"><img src="/wp/wp-content/themes/lifetechlab/images/works-title-re.jpg" alt="リフォーム" width="720" height="105"  /></h2>
+<h2 class="logo"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/works-title-re.jpg" alt="リフォーム" width="720" height="105"  /></h2>
 
 
 <?php if ( have_posts() ) while ( have_posts() ) : the_post(); ?>
@@ -110,7 +110,8 @@ Template Name Posts: 新装・リフォーム
 
 <table width="100%" cellspacing="0" cellpadding="3" class="lifetable">
   <tr>
-    <td width="20%" align="center"><a href="http://ltl.co.jp/inquiry/"><img src="http://ltl.co.jp/wp/wp-content/uploads/2012/07/inquiry.jpg" alt="" title="inquiry" width="650" height="60" /></a>
+    <?php $upload_dir = wp_upload_dir('2012/07'); ?>
+    <td width="20%" align="center"><a href="<?php echo esc_url( home_url( '/inquiry/' ) ); ?>"><img src="<?php echo esc_url( $upload_dir['url'] . '/inquiry.jpg' ); ?>" alt="" title="inquiry" width="650" height="60" /></a>
 </td>
   </tr>
 </table>

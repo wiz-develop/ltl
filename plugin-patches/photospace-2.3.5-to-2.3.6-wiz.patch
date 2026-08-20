@@ -1,0 +1,237 @@
+diff --git a/wp-content/plugins/photospace/photospace.php b/wp-content/plugins/photospace/photospace.php
+index 642605b..568d618 100644
+--- a/wp-content/plugins/photospace/photospace.php
++++ b/wp-content/plugins/photospace/photospace.php
+@@ -6,8 +6,10 @@ Description: A image gallery plugin for WordPress built using Galleriffic.
+ <a href="http://www.twospy.com/galleriffic/>galleriffic</a>
+ Author: Dean Oakley
+ Author URI: http://deanoakley.com/
+-Version: 2.3.5
++Version: 2.3.6-wiz
+ Text Domain: photospace
++Update URI: false
++Requires PHP: 7.4
+ */
+ 
+ /*  Copyright 2010  Dean Oakley  (email : contact@deanoakley.com)
+@@ -86,23 +88,27 @@ class photospace_plugin_options {
+ 
+ 	public static function update() {
+ 		if(isset($_POST['ps_save'])) {
++			if ( ! current_user_can( 'edit_theme_options' ) ) {
++				wp_die( esc_html__( 'You are not allowed to change these settings.', 'photospace' ) );
++			}
++			check_admin_referer( 'photospace_save_options', 'photospace_nonce' );
+ 			$options = photospace_plugin_options::PS_getOptions();
+ 			
+-			$options['num_thumb'] = stripslashes($_POST['num_thumb']);
+-			$options['thumbnail_margin'] =  stripslashes($_POST['thumbnail_margin']);
+-			$options['thumbnail_width'] = stripslashes($_POST['thumbnail_width']);
+-			$options['thumbnail_height'] = stripslashes($_POST['thumbnail_height']);			
++			$options['num_thumb'] = absint( $_POST['num_thumb'] );
++			$options['thumbnail_margin'] = absint( $_POST['thumbnail_margin'] );
++			$options['thumbnail_width'] = absint( $_POST['thumbnail_width'] );
++			$options['thumbnail_height'] = absint( $_POST['thumbnail_height'] );			
+ 			
+ 			
+-			$options['thumb_col_width'] = stripslashes($_POST['thumb_col_width']);
+-			$options['main_col_width'] = stripslashes($_POST['main_col_width']);
+-			$options['main_col_height'] = stripslashes($_POST['main_col_height']);
++			$options['thumb_col_width'] = absint( $_POST['thumb_col_width'] );
++			$options['main_col_width'] = absint( $_POST['main_col_width'] );
++			$options['main_col_height'] = absint( $_POST['main_col_height'] );
+ 			
+-			$options['gallery_width'] = stripslashes($_POST['gallery_width']);
++			$options['gallery_width'] = absint( $_POST['gallery_width'] );
+ 			
+-			$options['delay'] = stripslashes($_POST['delay']);
++			$options['delay'] = absint( $_POST['delay'] );
+ 			
+-			$options['button_size'] = stripslashes($_POST['button_size']);
++			$options['button_size'] = absint( $_POST['button_size'] );
+ 
+ 			if (isset($_POST['enable_history'])) {
+ 				$options['enable_history'] = (bool)true;
+@@ -164,11 +170,11 @@ class photospace_plugin_options {
+ 				$options['reset_css'] = (bool)false;
+ 			}
+ 			
+-			$options['play_text'] = stripslashes($_POST['play_text']);
+-			$options['pause_text'] = stripslashes($_POST['pause_text']);
+-			$options['previous_text'] = stripslashes($_POST['previous_text']);
+-			$options['next_text'] = stripslashes($_POST['next_text']);
+-			$options['download_text'] = stripslashes($_POST['download_text']);
++			$options['play_text'] = sanitize_text_field( wp_unslash( $_POST['play_text'] ) );
++			$options['pause_text'] = sanitize_text_field( wp_unslash( $_POST['pause_text'] ) );
++			$options['previous_text'] = sanitize_text_field( wp_unslash( $_POST['previous_text'] ) );
++			$options['next_text'] = sanitize_text_field( wp_unslash( $_POST['next_text'] ) );
++			$options['download_text'] = sanitize_text_field( wp_unslash( $_POST['download_text'] ) );
+ 			
+ 			update_option('ps_options', $options);
+ 
+@@ -189,7 +195,8 @@ class photospace_plugin_options {
+ 		
+ 			<h2>Photospace Options</h2>
+ 			
+-			<form method="post" action="#" enctype="multipart/form-data">				
++				<form method="post" action="#" enctype="multipart/form-data">				
++					<?php wp_nonce_field( 'photospace_save_options', 'photospace_nonce' ); ?>
+ 				
+ 				<div class="wp-menu-separator" style="clear:both; padding-bottom:15px; border-bottom:solid 1px #e6e6e6" ></div>
+ 				
+@@ -223,12 +230,12 @@ class photospace_plugin_options {
+ 				
+ 				<div class="fl_box">		
+ 					<p>Slide delay in milliseconds</p>
+-					<p><input type="text" name="delay" value="<?php echo($options['delay']); ?>" /></p>
++					<p><input type="text" name="delay" value="<?php echo esc_attr( $options['delay'] ); ?>" /></p>
+ 				</div>
+ 				
+ 				<div class="fl_box">		
+ 					<p>Page button size</p>
+-					<p><input type="text" name="button_size" value="<?php echo($options['button_size']); ?>" /></p>
++					<p><input type="text" name="button_size" value="<?php echo esc_attr( $options['button_size'] ); ?>" /></p>
+ 				</div>		 			
+ 
+ 
+@@ -239,22 +246,22 @@ class photospace_plugin_options {
+ 
+ 				<div class="fl_box">				
+ 					<p>Thumbnail Width</p>
+-					<p><input type="text" name="thumbnail_width" value="<?php echo($options['thumbnail_width']); ?>" /></p>
++					<p><input type="text" name="thumbnail_width" value="<?php echo esc_attr( $options['thumbnail_width'] ); ?>" /></p>
+ 				</div>
+ 				
+ 				<div class="fl_box">				
+ 					<p>Thumbnail Height</p>
+-					<p><input type="text" name="thumbnail_height" value="<?php echo($options['thumbnail_height']); ?>" /></p>
++					<p><input type="text" name="thumbnail_height" value="<?php echo esc_attr( $options['thumbnail_height'] ); ?>" /></p>
+ 				</div>
+ 				
+ 				<div class="fl_box">
+ 					<p>Main image width</p>
+-					<p><input type="text" name="main_col_width" value="<?php echo($options['main_col_width']); ?>" /></p>
++					<p><input type="text" name="main_col_width" value="<?php echo esc_attr( $options['main_col_width'] ); ?>" /></p>
+ 				</div>
+ 				
+ 				<div class="fl_box">
+ 					<p>Main image height</p>
+-					<p><input type="text" name="main_col_height" value="<?php echo($options['main_col_height']); ?>" /></p>
++					<p><input type="text" name="main_col_height" value="<?php echo esc_attr( $options['main_col_height'] ); ?>" /></p>
+ 				</div>
+ 				
+ 				<div class="fl_box">
+@@ -267,18 +274,18 @@ class photospace_plugin_options {
+ 				
+ 				<div class="fl_box">		
+ 					<p>Number of thumbnails</p>
+-					<p><input type="text" name="num_thumb" value="<?php echo($options['num_thumb']); ?>" /></p>
++					<p><input type="text" name="num_thumb" value="<?php echo esc_attr( $options['num_thumb'] ); ?>" /></p>
+ 				</div>
+ 					
+ 				
+ 				<div class="fl_box">				
+ 					<p>Thumbnail column width</p>
+-					<p><input type="text" name="thumb_col_width" value="<?php echo($options['thumb_col_width']); ?>" /></p>
++					<p><input type="text" name="thumb_col_width" value="<?php echo esc_attr( $options['thumb_col_width'] ); ?>" /></p>
+ 				</div>
+ 				
+ 				<div class="fl_box">				
+ 					<p>Thumbnail margin</p>
+-					<p><input type="text" name="thumbnail_margin" value="<?php echo($options['thumbnail_margin']); ?>" /></p>
++					<p><input type="text" name="thumbnail_margin" value="<?php echo esc_attr( $options['thumbnail_margin'] ); ?>" /></p>
+ 				</div>
+ 				
+ 				
+@@ -287,7 +294,7 @@ class photospace_plugin_options {
+ 				
+ 				
+ 				<h3>Gallery width (at least Thumbnail column + Main image width)</h3>
+-				<p><input type="text" name="gallery_width" value="<?php echo($options['gallery_width']); ?>" /></p>
++				<p><input type="text" name="gallery_width" value="<?php echo esc_attr( $options['gallery_width'] ); ?>" /></p>
+ 				<br />
+ 				
+ 				<div style="clear:both; padding-bottom:15px; border-bottom:solid 1px #e6e6e6" ></div>
+@@ -295,27 +302,27 @@ class photospace_plugin_options {
+ 								
+ 				<div class="fl_box">
+ 					<p>Play text</p>				
+-					<p><input type="text" name="play_text" value="<?php echo($options['play_text']); ?>" /></p>
++					<p><input type="text" name="play_text" value="<?php echo esc_attr( $options['play_text'] ); ?>" /></p>
+ 				</div>
+ 				
+ 				<div class="fl_box">
+ 					<p>Pause text</p>					
+-					<p><input type="text" name="pause_text" value="<?php echo($options['pause_text']); ?>" /></p>
++					<p><input type="text" name="pause_text" value="<?php echo esc_attr( $options['pause_text'] ); ?>" /></p>
+ 				</div>
+ 				
+ 				<div class="fl_box">				
+ 					<p>Previous text</p>	
+-					<p><input type="text" name="previous_text" value="<?php echo($options['previous_text']); ?>" /></p>
++					<p><input type="text" name="previous_text" value="<?php echo esc_attr( $options['previous_text'] ); ?>" /></p>
+ 				</div>
+ 
+ 				<div class="fl_box">				
+ 					<p>Next text</p>	
+-					<p><input type="text" name="next_text" value="<?php echo($options['next_text']); ?>" /></p>
++					<p><input type="text" name="next_text" value="<?php echo esc_attr( $options['next_text'] ); ?>" /></p>
+ 				</div>
+ 				
+ 				<div class="fl_box">				
+ 					<p>Download link text</p>	
+-					<p><input type="text" name="download_text" value="<?php echo($options['download_text']); ?>" /></p>
++					<p><input type="text" name="download_text" value="<?php echo esc_attr( $options['download_text'] ); ?>" /></p>
+ 				</div>
+ 
+ 				<div style="clear:both; padding-bottom:15px; border-bottom:solid 1px #e6e6e6" ></div>
+@@ -602,13 +609,13 @@ function photospace_shortcode( $atts ) {
+ 								$_post = get_post($aid); 
+ 		
+ 								$image_title = esc_attr($_post->post_title);
+-								$image_alttext = get_post_meta($aid, '_wp_attachment_image_alt', true);
+-								$image_caption = $_post->post_excerpt;
+-								$image_description = $_post->post_content;						
++									$image_alttext = esc_attr( get_post_meta( $aid, '_wp_attachment_image_alt', true ) );
++									$image_caption = wp_kses_post( $_post->post_excerpt );
++									$image_description = wp_kses_post( $_post->post_content );						
+ 															
+ 								$output_buffer .='
+-									<li><a class="thumb" href="' . $img[0] . '" title="' . $image_title . '" >								
+-											<img src="' . $thumb[0] . '" alt="' . $image_alttext . '" title="' . $image_title . '" />
++										<li><a class="thumb" href="' . esc_url( $img[0] ) . '" title="' . $image_title . '" >								
++												<img src="' . esc_url( $thumb[0] ) . '" alt="' . $image_alttext . '" title="' . $image_title . '" />
+ 										</a>
+ 										';
+ 		
+@@ -632,7 +639,7 @@ function photospace_shortcode( $atts ) {
+ 											
+ 											if($show_download){ 		
+ 												$output_buffer .='
+-												<div class="download"><a href="'.$full[0].'" title="'. $options["download_text"] .'" ><span>'. $options["download_text"] .'</span></a></div>
++											<div class="download"><a href="'. esc_url( $full[0] ) .'" title="'. esc_attr( $options["download_text"] ) .'" ><span>'. esc_html( $options["download_text"] ) .'</span></a></div>
+ 												';
+ 											}
+ 											
+@@ -715,10 +722,10 @@ function photospace_shortcode( $atts ) {
+ 					loadingContainerSel:       '#loading_".$post_id."',
+ 					renderSSControls:          true,
+ 					renderNavControls:         true,
+-					playLinkText:              '". $options['play_text'] ."',
+-					pauseLinkText:             '". $options['pause_text'] ."',
+-					prevLinkText:              '". $options['previous_text'] ."',
+-					nextLinkText:              '". $options['next_text'] ."',
++					playLinkText:              ". wp_json_encode( $options['play_text'] ) .",
++					pauseLinkText:             ". wp_json_encode( $options['pause_text'] ) .",
++					prevLinkText:              ". wp_json_encode( $options['previous_text'] ) .",
++					nextLinkText:              ". wp_json_encode( $options['next_text'] ) .",
+ 					nextPageLinkText:          '&rsaquo;',
+ 					prevPageLinkText:          '&lsaquo;',
+ 					enableHistory:              " . intval($options['enable_history']) . ",
+@@ -836,4 +843,4 @@ function photospace_shortcode( $atts ) {
+ 		";
+ 		
+ 		return $output_buffer;
+-}
+\ No newline at end of file
++}

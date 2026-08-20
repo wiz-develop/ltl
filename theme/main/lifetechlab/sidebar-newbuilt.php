@@ -1,7 +1,7 @@
 <?php /** Works */ ?>
 
 <div id="primary" class="widget-area" role="complementary">
-<img src="/wp/wp-content/themes/lifetechlab/images/works-side-title.gif" alt="works" width="200" height="20" />
+<img src="<?php echo get_stylesheet_directory_uri(); ?>/images/works-side-title.gif" alt="works" width="200" height="20" />
 <br /><br />
 <ul class="xoxo">
 <?php if ( ! dynamic_sidebar( 'primary-widget-area' ) ) : ?>

@@ -7,7 +7,8 @@ Tech Lab WordPress site.
 
 - `main`: production baseline for `www.ltl.co.jp`; production deployment is not
   performed without explicit approval.
-- `test`: upgraded source deployed to `ltl.wiz-services.com`.
+- `test`: upgraded source prepared for `ltl.wiz-services.com`; deployment is
+  gated on the target runtime matching PHP 7.4.
 
 ## Tracked scope
 
@@ -22,4 +23,3 @@ configuration files, logs, caches, and backups are intentionally excluded.
 
 The migration target must use PHP 7.4 to match production. Test-only files and
 database URLs must never be deployed to production.
-

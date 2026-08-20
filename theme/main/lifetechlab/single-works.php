@@ -32,7 +32,8 @@
 
 <table width="100%" cellspacing="0" cellpadding="3" class="lifetable">
   <tr>
-    <td width="20%" align="center"><a href="http://ltl.co.jp/inquiry/"><img src="http://ltl.co.jp/wp/wp-content/uploads/2012/07/inquiry.jpg" alt="" title="inquiry" width="650" height="60" /></a>
+    <?php $upload_dir = wp_upload_dir( '2012/07' ); ?>
+    <td width="20%" align="center"><a href="<?php echo esc_url( home_url( '/inquiry/' ) ); ?>"><img src="<?php echo esc_url( $upload_dir['url'] . '/inquiry.jpg' ); ?>" alt="" title="inquiry" width="650" height="60" /></a>
 </td>
   </tr>
 </table>
