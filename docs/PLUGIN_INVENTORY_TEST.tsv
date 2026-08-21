@@ -11,7 +11,7 @@ Contact Form 7	active	6.1.7	official latest compatible
 Custom Field Template	active	2.8.1	official latest compatible; not Custom Field Suite
 Custom Post Templates	active	1.5.1-wiz	security and PHP compatibility fork
 XML Sitemap Generator for Google	active	4.1.24	official latest compatible
-MapPress	active	2.97.9	official latest compatible
+MapPress	active	2.97.9-wiz	production DB migration compatibility fork
 Photospace	active	2.3.6-wiz	security-maintained fork
 WP PageNavi Style	active	1.4.1-wiz	security and PHP compatibility fork
 WP-PageNavi	active	2.94.6	latest release compatible with PHP 7.4

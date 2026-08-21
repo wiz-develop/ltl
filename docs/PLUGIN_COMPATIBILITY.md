@@ -19,6 +19,18 @@ reviewed and reapplied after any upstream replacement.
 - WP Total Hacks 4.7.2-wiz: replaces the removed `login_headertitle` filter
   with `login_headertext`, preserving the configured login-logo text without
   generating a WordPress 7.1 deprecation entry.
+- MapPress 2.97.9-wiz: treats a missing legacy filter `format` value as empty
+  during its 2.85 settings migration, avoiding PHP notices with the production
+  database. The plugin's internal schema version remains 2.97.9.
+
+MapPress ships `mappress.php` with CRLF line endings. Apply its retained patch
+from the plugin directory and normalize the result back to CRLF before
+deployment:
+
+```sh
+patch --binary -l -p1 < /path/to/mappress-2.97.9-to-2.97.9-wiz.patch
+perl -pi -e 's/\r?\n/\r\n/g' mappress.php
+```
 
 Each fork declares `Update URI: false` so an unrelated automatic update cannot
 overwrite the maintained source.
