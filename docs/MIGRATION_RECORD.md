@@ -6,8 +6,9 @@ Updated: 2026-08-21 JST
 
 - Copy source: `ltl.3d-showcase.net`, WordPress in `/cms/`.
 - Test target: `ltl.wiz-services.com`, WordPress in `/cms/`, public home at `/`.
-- Production reference: `www.ltl.co.jp`; no production deployment or setting
-  change was performed.
+- Production reference: `www.ltl.co.jp`; no production change was performed
+  during the test migration recorded in this document. The later approved
+  production release is recorded in `PRODUCTION_DEPLOYMENT.md`.
 
 ## Backups
 
@@ -104,12 +105,12 @@ Updated: 2026-08-21 JST
 - Temporary probes, importer, SQL archive, and QA-status URLs were deleted and
   verified as HTTP 404.
 
-## Remaining release gate
+## Release gate
 
 - The user accepted the deployed test environment on 2026-08-21, including
   public behavior and the form-mail check. The test release gate is complete.
-- Production work remains separate. No production deployment has been
-  performed, and a complete production backup is required first.
+- The separately approved production deployment was subsequently completed on
+  2026-08-21 after a fresh production backup and isolated restore validation.
 
 ## Known constraints
 
