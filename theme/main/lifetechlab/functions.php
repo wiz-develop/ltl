@@ -6,6 +6,25 @@ if ( ! isset( $content_width ) )
  
 add_action( 'after_setup_theme', 'twentyten_setup' );
 
+function lifetechlab_enqueue_assets() {
+	$theme_dir = get_stylesheet_directory();
+
+	wp_enqueue_style(
+		'lifetechlab-flexslider',
+		get_stylesheet_directory_uri() . '/flexslider.css',
+		array(),
+		(string) filemtime( $theme_dir . '/flexslider.css' )
+	);
+	wp_enqueue_script(
+		'lifetechlab-flexslider',
+		get_stylesheet_directory_uri() . '/js/jquery.flexslider.js',
+		array( 'jquery' ),
+		(string) filemtime( $theme_dir . '/js/jquery.flexslider.js' ),
+		false
+	);
+}
+add_action( 'wp_enqueue_scripts', 'lifetechlab_enqueue_assets' );
+
 if ( ! function_exists( 'twentyten_setup' ) ):
 
 function twentyten_setup() {
@@ -34,7 +53,7 @@ function twentyten_setup() {
 	) );
 
 	// カスタム背景を設定することを許可
-	add_custom_background();
+	add_theme_support( 'custom-background' );
 
 	// 変えることができる背景の設定はここから
 	define( 'HEADER_TEXTCOLOR', '' );
@@ -332,4 +351,3 @@ function twentyten_posted_in() {
 }
 endif;
 ?>
-

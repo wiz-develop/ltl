@@ -1,0 +1,18 @@
+plugin	status	version	note
+Akismet	active	5.7.2	official latest compatible
+All in One SEO	active	5.0.0.1	official latest compatible
+All-in-One WP Migration	active	7.110	official package
+Archives for a category	active	1.4.1-wiz	security-maintained fork
+Auto Featured Image - Auto Post Thumbnail	active	5.0.5	official latest compatible
+BackWPup	active	5.7.5	official latest compatible
+Category Posts Widget	active	5.0.0	official latest compatible
+Classic Editor	active	1.7.0	official latest compatible
+Contact Form 7	active	6.1.7	official latest compatible; restores production inquiry form
+Custom Field Template	active	2.8.1	official latest compatible; not Custom Field Suite
+Custom Post Templates	active	1.5.1-wiz	security and PHP compatibility fork
+XML Sitemap Generator for Google	active	4.1.24	official latest compatible
+MapPress	active	2.97.9-wiz	production DB migration compatibility fork
+Photospace	active	2.3.6-wiz	security-maintained fork
+WP PageNavi Style	active	1.4.1-wiz	security and PHP compatibility fork
+WP-PageNavi	active	2.94.6	latest release compatible with PHP 7.4
+WP Total Hacks	active	4.7.2-wiz	WordPress 7.1 login-hook compatibility fork

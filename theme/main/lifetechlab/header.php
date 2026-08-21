@@ -21,11 +21,9 @@ echo ' | ' . sprintf( __( 'Page %s', 'twentyten' ), max( $paged, $page ) );
 <link rel="stylesheet" type="text/css" media="all" href="<?php bloginfo( 'stylesheet_url' ); ?>" />
 <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>" />
 <link rel="alternate" type="application/rss+xml" title="lifetechlab-feed" href="<?php bloginfo('url'); ?>/feed/" />
-<link rel="stylesheet" href="http://ltl.co.jp/wp/wp-content/themes/lifetechlab/flexslider.css" type="text/css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-<script src="http://ltl.co.jp/wp/wp-content/themes/lifetechlab/js/jquery.flexslider.js"></script>
 <?php wp_head(); ?>
 <script type="text/javascript">
+(function($) {
 <!--gallery-->
 $("document").ready(function(){
     $('.flexslider').flexslider();
@@ -64,8 +62,10 @@ $("ul#works").stop().animate({opacity:0.7},1).slideUp("slow");
 return false;
 });
 
-});  
-		   
+	});
+
+})(jQuery);
+
 </script>
 
 
@@ -80,7 +80,7 @@ return false;
 <!-- #branding -->
 <div id="branding">
 <div id="logo">
-<h1><a href="<?php bloginfo('url'); ?>"><img src="/wp/wp-content/themes/lifetechlab/images/logo-anime.gif" alt="LIFE TECH LAB" width="300" height="125" /></a></h1></div>
+<h1><a href="<?php bloginfo('url'); ?>"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/logo-anime.gif" alt="LIFE TECH LAB" width="300" height="125" /></a></h1></div>
 <div id="address">
 <p>株式会社ライフテックラボ<br />
 一般建設業　京都府知事許可（般-1）第35659号<br />

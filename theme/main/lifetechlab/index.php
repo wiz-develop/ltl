@@ -52,7 +52,7 @@
 <div class="entry-content">
 <ul>
 <?php while (have_posts()) : the_post(); ?>
-<li class="news-line"><img src="/wp/wp-content/themes/lifetechlab/images/arrow1.gif" alt="" width="15" height="15" /><span class="date"><?php the_time('Y.m.d'); ?></span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php the_permalink() ?>"><?php the_title(); ?></a></li>
+<li class="news-line"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/arrow1.gif" alt="" width="15" height="15" /><span class="date"><?php the_time('Y.m.d'); ?></span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php the_permalink() ?>"><?php the_title(); ?></a></li>
 <?php endwhile;?>
 </ul>
 <?php endif; ?>
@@ -61,7 +61,7 @@
 </div>
 <!-- #entry-summary-END-->
 
-<p><a href="<?php bloginfo('url'); ?>/category/info/">過去ログはこちら <img src="/wp/wp-content/themes/lifetechlab/images/arrow2.gif" alt="" width="13" height="12" /></a></p>
+<p><a href="<?php bloginfo('url'); ?>/category/info/">過去ログはこちら <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/arrow2.gif" alt="" width="13" height="12" /></a></p>
 </div>
 <!-- #information END -->
 
@@ -85,7 +85,7 @@
 <?php the_excerpt(); ?></li>
 <?php else: // サムネイルを持っていないときの処理 ?>
 <li class="gallery-thumb">
-<a href="<?php the_permalink(); ?>"><img src="/wp/wp-content/themes/lifetechlab/images/dummy.jpg" alt="" width="215" height="130" /></a><br />
+<a href="<?php the_permalink(); ?>"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/dummy.jpg" alt="" width="215" height="130" /></a><br />
 <span class="days"><?php the_time('Y.m.d'); ?></span><br />
 <a href="<?php the_permalink(); ?>" title="<?php printf( esc_attr__( 'Permalink to %s', 'twentyten' ), the_title_attribute( 'echo=0' ) ); ?>" rel="bookmark" class="blogTitle"><?php the_title(); ?></a><br />
 <?php the_excerpt(); ?></li>
@@ -100,7 +100,7 @@
 <!-- blog最新2件 END-->
 
 
-<p><a href="<?php bloginfo('url'); ?>/category/blog/">過去ログはこちら <img src="/wp/wp-content/themes/lifetechlab/images/arrow2.gif" alt="" width="13" height="12" /></a></p>
+<p><a href="<?php bloginfo('url'); ?>/category/blog/">過去ログはこちら <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/arrow2.gif" alt="" width="13" height="12" /></a></p>
 </div>
 <!-- #blog END-->
 

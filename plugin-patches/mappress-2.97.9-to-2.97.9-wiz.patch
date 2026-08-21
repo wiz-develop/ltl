@@ -1,0 +1,32 @@
+--- a/mappress.php
++++ b/mappress.php
+@@ -5,7 +5,8 @@
+ Author URI: https://www.mappresspro.com
+ Pro Update URI: https://www.mappresspro.com
+ Description: MapPress makes it easy to add Google Maps and Leaflet Maps to WordPress
+-Version: 2.97.9
++Version: 2.97.9-wiz
++Update URI: false
+ Author: Chris Richardson
+ Text Domain: mappress-google-maps-for-wordpress
+ Thanks to all the translators and to Scott DeJonge for his wonderful icons
+@@ -677,9 +678,10 @@
+ 				foreach(['post', 'user'] as $type) {
+ 					$filters = self::$options->filters[$type] ?? [];
+ 					foreach($filters as &$filter) {
+-						if ($filter['format'] == 'radio')
++						$format = $filter['format'] ?? '';
++						if ($format == 'radio')
+ 							$filter['format'] = 'radios';
+-						else if ($filter['format'] == 'checkbox')
++						else if ($format == 'checkbox')
+ 							$filter['format'] = 'checkboxes';
+ 					}
+ 					self::$options->filters[$type] = $filters;
+@@ -1331,4 +1333,4 @@
+ }
+ 
+ $mappress = new Mappress();
+-?>
+\ No newline at end of file
++?>

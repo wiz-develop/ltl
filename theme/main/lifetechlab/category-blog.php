@@ -8,7 +8,7 @@
 <!-- #content -->
 <div id="content" role="main">
 
-<h2 class="logo"><img src="/wp/wp-content/themes/lifetechlab/images/blog-title2.jpg" alt="BLOG" width="720" height="105"  /></h2>
+<h2 class="logo"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/blog-title2.jpg" alt="BLOG" width="720" height="105"  /></h2>
 
 <?php
 $category_description = category_description();

@@ -1,0 +1,39 @@
+diff --git a/wp-content/plugins/wp-total-hacks/wp-total-hacks.php b/wp-content/plugins/wp-total-hacks/wp-total-hacks.php
+index 494490c..d61a69d 100644
+--- a/wp-content/plugins/wp-total-hacks/wp-total-hacks.php
++++ b/wp-content/plugins/wp-total-hacks/wp-total-hacks.php
+@@ -4,7 +4,9 @@ Plugin Name: WP Total Hacks
+ Author: Takayuki Miyauchi
+ Plugin URI: https://github.com/miya0001/wp-total-hacks
+ Description: WP Total Hacks can customize your WordPress.
+-Version: 4.7.2
++Version: 4.7.2-wiz
++Requires PHP: 7.4
++Update URI: false
+ Author URI: http://wpist.me/
+ Domain Path: /languages
+ Text Domain: wp-total-hacks
+@@ -74,7 +76,7 @@ class TotalHacks {
+ 		add_action( 'login_head',		array( $this, 'login_head' ) );
+ 		add_action( 'admin_menu' ,	   array( $this, 'admin_menu' ) );
+ 		add_filter( 'login_headerurl',   array( $this, 'login_headerurl' ) );
+-		add_filter( 'login_headertitle', array( $this, 'login_headertitle' ) );
++		add_filter( 'login_headertext',  array( $this, 'login_headertext' ) );
+ 		add_action( 'pre_ping',		  array( $this, 'pre_ping' ) );
+ 		add_action( 'wp_dashboard_setup',array( $this, 'wp_dashboard_setup' ) );
+ 		add_filter( 'the_content_more_link', array( $this, 'the_content_more_link' ) );
+@@ -260,12 +262,12 @@ class TotalHacks {
+ 		}
+ 	}
+ 
+-	public function login_headertitle( $url )
++	public function login_headertext( $text )
+ 	{
+ 		if ( $op = $this->op( 'wfb_login_title' ) ) {
+ 			return $op;
+ 		} else {
+-			return $url;
++			return $text;
+ 		}
+ 	}
+ 

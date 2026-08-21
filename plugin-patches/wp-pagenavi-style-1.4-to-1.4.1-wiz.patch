@@ -1,0 +1,104 @@
+diff --git a/wp-content/plugins/wp-pagenavi-style/includes/options.php b/wp-content/plugins/wp-pagenavi-style/includes/options.php
+index 3bee1e4..b2451ee 100644
+--- a/wp-content/plugins/wp-pagenavi-style/includes/options.php
++++ b/wp-content/plugins/wp-pagenavi-style/includes/options.php
+@@ -1,18 +1,37 @@
+ <div class="wrap">
+ 	<h2><?php echo _e('WP PageNavi Style Options','wp-pagenavi-style'); ?></h2>
+-	<script type="text/javascript" src="<?php echo WP_PAGENAVI_STYLE_PATH;?>js/jquery-1.5.min.js"></script>
+-	<script type="text/javascript" src="<?php echo WP_PAGENAVI_STYLE_PATH;?>js/colorpicker.js"></script>
++		<script type="text/javascript" src="<?php echo WP_PAGENAVI_STYLE_PATH;?>js/colorpicker.js"></script>
+ 	<script type="text/javascript" src="<?php echo WP_PAGENAVI_STYLE_PATH;?>js/script.js"></script>
+ 	<link rel="stylesheet" href="<?php echo WP_PAGENAVI_STYLE_PATH;?>/style/colorpicker.css" type="text/css" />
+ 	<link rel="stylesheet" href="<?php echo WP_PAGENAVI_STYLE_PATH;?>/style/wp-pagenavi-style-admin.css" type="text/css" />
+ 	<?php
+ 	if(isset($_POST['WP_PAGENAVI_STYLE_OPTION']))
+ 	{
++		if ( ! current_user_can( 'manage_options' ) ) {
++			wp_die( esc_html__( 'You are not allowed to change these settings.', 'wp-pagenavi-style' ) );
++		}
++		check_admin_referer( 'wp_pagenavi_style_save', 'wp_pagenavi_style_nonce' );
++		$submitted = wp_unslash( $_POST['WP_PAGENAVI_STYLE_OPTION'] );
++		$options = array(
++			'stylesheet'          => in_array( $submitted['stylesheet'], array( 'template', 'custom' ), true ) ? $submitted['stylesheet'] : 'template',
++			'template'            => sanitize_file_name( $submitted['template'] ),
++			'align'               => in_array( $submitted['align'], array( 'left', 'right', 'center' ), true ) ? $submitted['align'] : 'left',
++			'font_size'           => preg_match( '/^(?:[89]|1[0-9]|2[0-5])px$/', $submitted['font_size'] ) ? $submitted['font_size'] : '12px',
++			'heading_color'       => sanitize_hex_color_no_hash( $submitted['heading_color'] ) ?: '000000',
++			'background_color'    => sanitize_hex_color_no_hash( $submitted['background_color'] ) ?: '000000',
++			'hover_color'         => sanitize_hex_color_no_hash( $submitted['hover_color'] ) ?: '666666',
++			'link_color'          => sanitize_hex_color_no_hash( $submitted['link_color'] ) ?: 'ffffff',
++			'link_active_color'   => sanitize_hex_color_no_hash( $submitted['link_active_color'] ) ?: 'ffffff',
++			'border_color'        => sanitize_hex_color_no_hash( $submitted['border_color'] ) ?: '666666',
++			'border_active_color' => sanitize_hex_color_no_hash( $submitted['border_active_color'] ) ?: '000000',
++		);
++		if ( ! is_file( WP_PAGENAVI_STYLE_CSS_PATH . '/' . $options['template'] . '.css' ) ) {
++			$options['template'] = 'css3_black';
++		}
+ 		echo '<div class="updated fade" id="message"><p>';
+ 		_e('WP PageNavi Style Options Settings <strong>Updated</strong>');
+ 		echo '</p></div>';
+-		unset($_POST['update']);
+-		update_option('WP_PAGENAVI_STYLE_OPTION', $_POST['WP_PAGENAVI_STYLE_OPTION']);
++		update_option('WP_PAGENAVI_STYLE_OPTION', $options);
+ 	}
+ 	?>
+ 	<?php if(!function_exists('wp_pagenavi')) : ?>
+@@ -32,7 +51,8 @@
+ 	$form_url=admin_url().'admin.php?page=wp-pagenavi-style/wp-pagenavi-style.php';
+ 	?>
+ 
+-	<form name="wp_pn_style_options_form" id="wp_pn_style_options_form" method="POST" action="<?php echo $form_url;?>">
++		<form name="wp_pn_style_options_form" id="wp_pn_style_options_form" method="POST" action="<?php echo $form_url;?>">
++			<?php wp_nonce_field( 'wp_pagenavi_style_save', 'wp_pagenavi_style_nonce' ); ?>
+ 		<table cellspacing="5" cellpadding="5" class="widefat" width="400">
+ 			<thead>
+ 			<tr>
+@@ -67,7 +87,7 @@
+ 	$dir = opendir($filePath);
+ 	while ($file = readdir($dir)) {
+ 	 
+-	  if (eregi("\.css",$file)) { /* Look for files with .png extension */
++	  if ( preg_match( '/\.css$/i', $file ) ) {
+ 		$flie_name=explode('.',$file);
+ 		echo '<option value="'.$flie_name[0].'"'; ?>
+ 		<?php selected($flie_name[0], $options['template']); ?>>
+@@ -169,8 +189,6 @@
+ 			</td></tr>
+ 		</table>
+ 	</td>
+-	<td width="30%" valign="top">
+-	<?php include_once dirname(__FILE__).'/our_feeds.php'; ?>
+-	</td></tr>
++		<td width="30%" valign="top"></td></tr>
+ 	</table>
+-</div>
+\ No newline at end of file
++</div>
+diff --git a/wp-content/plugins/wp-pagenavi-style/wp-pagenavi-style.php b/wp-content/plugins/wp-pagenavi-style/wp-pagenavi-style.php
+index 514d544..147af21 100644
+--- a/wp-content/plugins/wp-pagenavi-style/wp-pagenavi-style.php
++++ b/wp-content/plugins/wp-pagenavi-style/wp-pagenavi-style.php
+@@ -1,12 +1,14 @@
+ <?php
+ /*
+ Plugin Name: Wp Pagenavi Style
+-Version: 1.4
++Version: 1.4.1-wiz
+ Description: Adds Style options for most popular wordpress pagination plugin wp-pagenavi.
+ Author: snilesh
+ Plugin URI: http://www.snilesh.com/wordpress-pagenavi-style-plugin/
+ Text Domain: wp-pagenavi-style
+ Domain Path: /lang
++Update URI: false
++Requires PHP: 7.4
+ 
+ 
+ Copyright 2014  Nilesh Shiragave  ( email : snilesh.com@gmail.com )
+@@ -148,4 +150,4 @@ function wp_pn_style_style_codes()
+ 
+ 	/* LOAD COMMON FUNCTIONS WHICH ARE USED IN ALL MY PLUGINS */
+ 	include_once dirname(__FILE__).'/includes/common_functions.php';
+-?>
+\ No newline at end of file
++?>
