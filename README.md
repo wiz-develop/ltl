@@ -15,11 +15,13 @@ Tech Lab WordPress site.
 - `theme/main/lifetechlab/`: production custom-theme baseline.
 - `plugin-patches/`: compatibility and security patches retained for future
   plugin upgrades.
+- `mu-plugins/`: host-limited safeguards used only on the test site.
 - `plugin-notes/`: decisions for abandoned or locally maintained plugins.
 - `docs/`: version inventories, QA, deployment, and rollback records.
 
 Databases, WordPress core, third-party plugin packages, uploads, credentials,
 configuration files, logs, caches, and backups are intentionally excluded.
 
-The migration target must use PHP 7.4 to match production. Test-only files and
-database URLs must never be deployed to production.
+The migration target uses PHP 7.4.33 to match production. Test-only files,
+including `mu-plugins/wiz-staging-safety.php`, and target database URLs must
+never be deployed to production.

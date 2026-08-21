@@ -75,8 +75,5 @@
 <?php wp_footer();?>
 </div>
 <!-- #ajastContainer-END -->
-<!-- SWC導入20130422 --> 
-<script src="http://hei.a.swcs.jp/12/j/" type="text/javascript"></script> 
-<!-- SWC導入20130422 --> 
 </body>
 </html>

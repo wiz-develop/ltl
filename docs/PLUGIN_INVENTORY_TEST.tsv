@@ -16,3 +16,4 @@ Photospace	active	2.3.6-wiz	security-maintained fork
 WP PageNavi Style	active	1.4.1-wiz	security and PHP compatibility fork
 WP-PageNavi	active	2.94.6	latest release compatible with PHP 7.4
 WP Total Hacks	active	4.7.2-wiz	WordPress 7.1 login-hook compatibility fork
+WIZ Staging Safety	must-use	1.0.0	test-host-only indexing and mail safeguard
