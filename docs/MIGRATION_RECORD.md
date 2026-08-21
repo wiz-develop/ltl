@@ -106,10 +106,10 @@ Updated: 2026-08-21 JST
 
 ## Remaining release gate
 
-- Confirm the administrator notification and requester auto-reply in their
-  real mailboxes. Local mailer acceptance alone is not delivery acceptance.
-- Obtain visual and functional acceptance for the test URL before any separate
-  production work. No production deployment has been performed.
+- The user accepted the deployed test environment on 2026-08-21, including
+  public behavior and the form-mail check. The test release gate is complete.
+- Production work remains separate. No production deployment has been
+  performed, and a complete production backup is required first.
 
 ## Known constraints
 

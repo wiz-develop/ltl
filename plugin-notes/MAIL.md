@@ -12,7 +12,7 @@ deployed to production.
 
 The deployed target returned `mail_sent` for Contact Form 7 and recorded both
 the administrator notice and requester auto-reply as accepted by the local
-mailer. Real mailbox arrival remains a manual release-gate item.
+mailer. The user accepted the test environment and mail check on 2026-08-21.
 
 After every WordPress, PHP, form, or mail-related update, submit the public form
 and confirm both messages arrive in their real mailboxes. If native delivery on
